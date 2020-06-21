@@ -1,0 +1,522 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[1]:
+
+
+print("Hello world!")
+
+
+# In[3]:
+
+
+#인공지능과 기계학습 과제 - 3주차
+num1=int(input("첫번째 정수 : "))
+num2=int(input("두번째 정수 : "))
+operator=input("연산자 : ")
+
+if(operator=="+"):
+    print(num1,operator,num2,"=",num1+num2)
+elif(operator=="-"):
+    print(num1,operator,num2,"=",num1-num2)
+elif(operator=="*"):
+    print(num1,operator,num2,"=",num1*num2)
+else:
+    print(num1,operator,num2,"=",num1%num2)
+
+
+# In[12]:
+
+
+#인공지능과 기계학습 과제 - 6주차
+num=int(input("번호 :"))
+kor=int(input("국어 점수 :"))
+eng=int(input("영어 점수 :"))
+math=int(input("수학 점수 :"))
+phy=int(input("물리 점수 :"))
+total=kor+eng+math+phy
+ang=float(total/4)
+
+if(ang>=90):
+    grade="A"
+elif(ang<90 and ang>=80):
+    grade="B"
+elif(ang<80 and ang>=70):
+    grade="C"
+elif(ang<70 and ang>=60):
+    grade="D"
+else:
+    grade="F"
+    
+print("="*70)
+print("번호\t국어\t영어\t수학\t물리\t총점\t평균\t학점")
+print("="*70)
+print(num,'\t' ,kor,'\t',eng,'\t',math,'\t',phy,'\t',total,'\t',ang,'\t',grade)
+
+
+# In[ ]:
+
+
+# 인공지능과 기계학습 - 7주차 팀과제
+class Grade:
+    def __init__(self):
+        self.hakbunlist=[]
+        self.namelist=[]
+        self.korlist=[]
+        self.englist=[]
+        self.mathlist=[]
+        flag= True
+        print("프로그램을 종료하려면 학번에 '0'을 입력하세요")
+        while flag:
+            hakbun=input("학번을 입력하시오:")
+            if hakbun=='0':
+                flag=False
+            else:
+                name=input("이름을 입력하세요:")
+                kor=int(input("국어점수를 입력하세요:"))
+                eng=int(input("영어점수를 입력하세요:"))
+                math=int(input("수학점수를 입력하세요:"))
+
+                self.hakbunlist.append(hakbun)
+                self.namelist.append(name)
+                self.korlist.append(kor)
+                self.englist.append(eng)
+                self.mathlist.append(math)
+
+   
+        self.totlist=[]
+        self.avglist=[]
+        self.hakjumlist=[]
+        total=0
+        avg=0.0
+        for i in range(len(self.korlist)):
+            total = self.korlist[i]+self.englist[i]+self.mathlist[i]
+            avg=total/3.0
+            self.totlist.append(total)
+            self.avglist.append(avg)
+
+            if avg>=90:
+                grade='A'
+            elif avg>= 80:
+                grade='B'
+            elif avg>= 70:
+                grade='C'
+            elif avg>= 60:
+                grade='D'
+            else:
+                grade='F'
+            self.hakjumlist.append(grade)
+
+
+    def printList(self):
+        print("="*70)
+        print("번호\t\t이름\t국어\t영어\t수학\t총점\t평균\t학점")
+        print("="*70)
+        for i in range(len(self.hakbunlist)):
+            print("%3s\t\t%s\t%3d\t%3d\t%3d\t%3d\t%.2f\t%s"
+            %(self.hakbunlist[i],self.namelist[i],self.korlist[i],self.englist[i],self.mathlist[i],
+            self.totlist[i],self.avglist[i],self.hakjumlist[i]))
+
+myGrade=Grade()
+myGrade.printList()
+
+
+# In[13]:
+
+
+# 인공지능과 기계학습 과제 - 10주차 파이썬 실습 선형회귀모델
+import matplotlib.pylab as plt #  파이썬에서 자료를 차트나 plot으로 시각화하는 라이브러리 간단히 그래프 라이브러리
+from sklearn import linear_model  # 선형회귀 모델 라이브러리 
+
+reg = linear_model.LinearRegression() # 선형회귀모델을 만들어서 reg 변수에 저장한다. 
+
+# fit() 함수를 이용하여 모델을 학습시킨다. 학습 시킬 값 x는 2차원의 형태로 y는 1차원의 형태로 입력해야한다.
+X = [[174],[152],[138],[128],[186]] 
+y = [71,55,46,38,88]
+# 학습시킬 모델값 지정
+
+# 위에 지정한 값으로 모델을 학습시킨다.
+reg.fit(X,y) 
+
+# 키가 165인 경우 예측한 몸무게 출력하기 
+print(reg.predict([[165]]))
+
+# 산포그래프 작성 검정색 동그라미가 산포그래프임 
+plt.scatter(X, y , color = 'black')
+
+# 선형회귀모델 예측모델(?)을 y_pred 변수에 저장한다
+y_pred = reg.predict(X)
+
+# 라인플롯(그래프)을 그리는 함수 색은 파랑 선의 굵기는 3으로 하여 y_pred 변수를 그래프로 그린다.
+plt.plot(X, y_pred, color = 'blue', linewidth = 3)
+plt.show() # 그래프를 출력한다
+
+
+# In[15]:
+
+
+# 인공지능과 기계학습 - 10주차 kNN 알고리즘
+from sklearn.datasets import load_iris # Scikit-Learn에 들어있는 iris Dataset을 가져오기 
+import pandas as pd # 데이터 분석 라이브러리 대용량의 데이터를 처리하는데 매우 편리한 도구
+import numpy as np # 데이터를 분석할 때 사용되는 라이브러리 
+
+import matplotlib.pyplot as plt # 그래프 라이브러리
+import seaborn as sns
+
+
+iris = load_iris() # iris 변수에 isis dataset 정보를 대입하기
+
+print(iris)
+print(iris.DESCR)
+
+print(iris.data)
+print(iris.feature_names)
+
+print(iris.target)
+print(iris.target_names)
+
+df = pd.DataFrame(data = iris.data, columns = iris.feature_names)
+df['target'] = iris.target
+
+df['target'] = df['target'].map({0 : "setosa", 1 : "versicolor", 2 : "virginica"})
+print(df)
+
+x_data = df.iloc[: , :-1]
+y_data = df.iloc[:, [-1]]
+
+print("x-data : ",x_data)
+
+sns.pairplot(df, x_vars = ["sepal length (cm)"], y_vars = ["sepal width (cm)"], hue = "target", height = 5)
+
+
+# In[18]:
+
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(iris['data'], iris['target'], random_state = 0)
+
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn import metrics
+
+knn = KNeighborsClassifier(n_neighbors = 5 )
+knn.fit(X_train, y_train)
+
+y_pred = knn.predict(X_test)
+scores = metrics.accuracy_score(y_test, y_pred)
+print(scores)
+
+#0 = setosa, 1=versicolor, 2=virginica
+classes = {0:'setosa',1:'versicolor',2:'virginica'}
+
+# 아직 보지 못한 새로운 데이터를 제시해보자. 
+x_new = [[3,4,5,2],
+         [5,4,2,2]]
+y_predict = knn.predict(x_new)
+
+print(classes[y_predict[0]])
+print(classes[y_predict[1]])
+
+
+# In[20]:
+
+
+knn = KNeighborsClassifier(n_neighbors = 5)
+knn.fit(X_train,y_train)
+
+classes = {0 : "setosa", 1 : "versicolor", 2 : "virginica"}
+
+x_new = [[3,4,5,2],
+         [5,4,2,2]]
+
+y_predict = knn.predict(x_new)
+
+print(classes[y_predict[0]])
+print(classes[y_predict[1]])
+
+
+# In[20]:
+
+
+from sklearn import datasets
+import matplotlib.pyplot as plt
+import pandas as pd
+from sklearn.cluster import KMeans
+
+iris = datasets.load_iris()
+
+X = iris.data[:, :2]
+y = iris.target
+
+plt.scatter(X[:, 0], X[:,1], c=y, cmap="gist_rainbow")
+
+plt.xlabel("Spea1 Length", fontsize=18)
+plt.ylabel("Sepal Width", fontsize = 18)
+
+km = KMeans(n_clusters = 3 , n_jobs = 4, random_state = 21)
+km.fit(X)
+
+centers = km.cluster_centers_
+print(centers)
+
+
+# In[21]:
+
+
+# 인공지능과 기계학습 - 11주차 과제 신경망을 이용한 iris 분류
+import tensorflow
+import keras
+
+
+# In[22]:
+
+
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+
+
+# In[23]:
+
+
+import os
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+os.chdir("C:/Users/user/project")
+print(os.getcwd)
+iris = pd.read_csv('iris.csv')
+
+print(iris.head())
+iris.info()
+
+iris2 = np.reshape(6,1)
+
+iris.loc[iris['species']=='virginica', 'species'] = 0
+iris.loc[iris['species'] == 'versicolor', 'species'] = 1
+iris.loc[iris['species'] == 'setosa', 'species' ] = 2
+
+X = iris[['sepal_length','sepal_width']].values.T
+Y = iris[['species']].values.T
+Y = Y.astype('uint8')
+
+plt.scatter(X[0, :], X[1, :], c = Y[0, :], s = 40, cmap = plt.cm.Spectral)
+plt.title("IRIS DATA | Blue - Versicolor, Red - Virginica")
+plt.xlabel("petal_length")
+plt.ylabel("petal_width")
+plt.show()
+
+
+# In[24]:
+
+
+import seaborn as sns
+import pandas as pd
+import numpy as np
+
+sns.set(style='ticks', color_codes=True)
+iris = sns.load_dataset("iris")
+g = sns.pairplot(iris, hue="species", palette="husl")
+
+
+# In[25]:
+
+
+iris.info()
+iris['species'].unique()
+# 0,1,2,3은 input 4는 output
+
+
+# In[26]:
+
+
+from sklearn.preprocessing import LabelEncoder
+
+X = iris.iloc[:, :4].values
+y = iris.iloc[:, 4].values
+
+encoder = LabelEncoder()
+y1 = encoder.fit_transform(y)
+Y = pd.get_dummies(y1).values
+
+print(Y)
+
+
+# In[27]:
+
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X,Y,test_size=0.2, random_state=1)
+
+X_train.shape, X_test.shape, y_train.shape, y_test.shape
+
+
+# In[28]:
+
+
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.optimizers import Adam
+
+model = Sequential()
+
+model.add(Dense(64, input_shape=(4,), activation='relu'))
+model.add(Dense(64, activation = 'relu'))
+model.add(Dense(3,activation='softmax'))
+
+model.compile(loss='categorical_crossentropy', optimizer='Adam', metrics=['accuracy'])
+
+model.summary()
+
+
+# In[28]:
+
+
+hist = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=100)
+
+
+# In[32]:
+
+
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(12,8))
+plt.plot(hist.history['loss'])
+plt.plot(hist.history['val_loss'])
+plt.plot(hist.history['accuracy'])
+plt.plot(hist.history['val_accuracy'])
+
+plt.legend(['loss', 'val_loss', 'accuracy', 'val_accuracy'])
+plt.grid()
+plt.show()
+
+
+# In[29]:
+
+
+# 인공지능과 기계학습 - 12주차 CNN을 이용한 손글씨 분류 
+import warnings
+warnings.simplefilter(action='ignore', category = FutureWarning)
+
+import sys
+import tensorflow as tf
+import keras
+from keras.models import Sequential
+from keras.layers import Dense, Dropout, Flatten
+from keras.layers.convolutional import Conv2D, MaxPooling2D
+import numpy as np
+
+np.random.seed(7)
+
+print('Python version : ', sys.version)
+print('TensorFlow version : ', tf.__version__)
+print('Keras version : ' ,  keras.__version__)
+
+
+# In[30]:
+
+
+mnist = keras.datasets.mnist
+
+(X_train0, y_train0), (X_test0, y_test0) = mnist.load_data()
+
+import matplotlib.pylab as plt
+
+plt.figure(figsize=(6,1))
+
+for i in range(36):
+    plt.subplot(3,12,i+1)
+    plt.imshow(X_train0[i], cmap="gray")
+    plt.axis("off")
+    
+plt.show()
+
+
+# In[31]:
+
+
+img_rows = 28
+img_cols = 28
+
+(x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
+
+input_shape = (img_rows, img_cols, 1)
+x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1)
+x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
+
+x_train = x_train.astype('float32') / 255
+x_test = x_test.astype('float32') / 255
+
+print('x_train shape : ', x_train.shape)
+print(x_train.shape[0], 'train samples')
+print(x_test.shape[0], 'test samples')
+
+batch_size = 128
+num_classes = 10
+epochs = 12
+
+y_train = keras.utils.to_categorical(y_train, num_classes)
+y_test = keras.utils.to_categorical(y_test, num_classes)
+
+
+# In[32]:
+
+
+model = Sequential()
+model.add(Conv2D(32, kernel_size=(5,5), strides=(1,1),
+                  padding = 'same', activation='relu', input_shape=input_shape))
+
+model.add(MaxPooling2D(pool_size=(2,2), strides=(2,2)))
+model.add(Conv2D(64, (2,2) , activation='relu', padding='same'))
+model.add(MaxPooling2D(pool_size=(2,2)))
+model.add(Dropout(0,25))
+model.add(Flatten())
+model.add(Dense(1000, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(num_classes, activation='softmax'))
+model.summary()
+
+
+# In[33]:
+
+
+model.compile(loss = 'categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+hist = model.fit(x_train, y_train, batch_size = batch_size,
+                 epochs=epochs, verbose=1, validation_data = (x_test, y_test))
+
+
+# In[36]:
+
+
+score = model.evaluate(x_test, y_test, verbose = 0)
+print("Test loss:" , score[0])
+print("Test accuracy: ", score[1])
+
+import numpy as np
+
+y_vloss = hist.history['val_loss']
+y_loss = hist.history['loss']
+x_len = np.arange(len(y_loss))
+plt.plot(x_len, y_vloss, marker = '.', c ="red", label = "Testset_loss")
+plt.plot(x_len, y_loss, marker = '.', c = "blue", label = "Trainset_loss")
+plt.legend(loc= 'upper right')
+plt.grid()
+plt.xlabel('epoch')
+plt.ylabel('loss')
+plt.show()
+
+
+# In[38]:
+
+
+n = 0
+plt.imshow(x_test[n].reshape(28,28), cmap='Greys', interpolation = 'nearest')
+plt.show()
+print('The Answer is', model.predict_classes(x_test[n].reshape((1,28,28,1))))
+
+
+# In[ ]:
+
+
+
+
