@@ -54,14 +54,13 @@ def split(mise_data, steps):
         X.append(spl_x)
         y.append(spl_y)
         
-    return array(X), array(y)
-   #  return X, y
-
+    return array(X), array(y) # 배열형태로 반환
+  
 
 # In[9]:
 
 
-# 강남구데이터(2010.01.01~2018.12.31)를 Train_set으로 지정하여 데이터 전처리하기 
+# 구데이터(2010.01.01~2018.12.31)를 Train_set으로 지정하여 데이터 전처리하기 
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -102,7 +101,7 @@ d = MinMaxScalar(y_pm25)
 
 # In[15]:
 
-
+# LSTM 입력은 3차원배열로 해야함 numpy.reshape 함수를 사용하여 2차원 배열을 3차원으로 변환
 X_pm10 = a.reshape((x_pm10.shape[0], x_pm10.shape[1], 1))
 X_pm25 = a.reshape((x_pm25.shape[0], x_pm25.shape[1], 1))
 
@@ -113,15 +112,16 @@ X_pm10.shape
 # In[16]:
 
 
-# 심층 RNN 구현 LSTM 알고리즘 사용
+# 심층 RNN신경망 LSTM 알고리즘 사용
 model = Sequential()
+# 입력층 32, 활성화함수 : relu 사용 
 model.add(LSTM(32, activation = 'relu', input_shape = (steps,feature) )) 
 
 # model.add(LSTM(32, activation = 'relu'))
 model.add(Dense(1))
 
 model.compile(optimizer = 'adam', loss = 'mse', metrics = ['accuracy'])
-
+# 기계학습
 hist1 = model.fit(X_pm10, b, epochs = 50, batch_size = 10 , verbose = 1)
 
 model.summary
@@ -129,7 +129,7 @@ model.summary
 
 # In[17]:
 
-
+# 오차율 그래프로 나타내기 
 plt.plot(hist1.history['loss'])
 plt.ylim(0.0, 0.01)
 plt.ylabel('loss')
@@ -147,6 +147,7 @@ TEST1['PM10'] = TEST1['PM10'].fillna(TEST1['PM10'].mean()).astype(float)
 TEST2 = pd.read_csv('Mapo-tests.csv', encoding = 'CP949') # 테스트셋
 TEST2['PM10'] = TEST2['PM10'].fillna(TEST2['PM10'].mean()).astype(float) 
 
+# 테스트셋도 예측 전에 전처리 과정과 정규화과정을 수행한다. 
 test_pm10_1 = array(TEST1['PM10'])
 x_testpm10_1, y_testpm10_1 = split(test_pm10_1, steps)
 test_a1 = MinMaxScalar(x_testpm10_1)
@@ -157,6 +158,7 @@ x_testpm10_1= test_a1.reshape((x_testpm10_1.shape[0], x_testpm10_1.shape[1], 1))
 # 테스트 모델을 가지고 예측해보기
 y_pred1 = model.predict(x_testpm10_1)
 
+# 테스트셋도 예측 전에 전처리 과정과 정규화과정을 수행한다. 
 test_pm10_2 = array(TEST2['PM10'])
 x_testpm10_2, y_testpm10_2 = split(test_pm10_2, steps)
 test_a2 = MinMaxScalar(x_testpm10_2)
@@ -189,7 +191,7 @@ plt.plot(y_pred2, 'b')
 plt.title("Mapo-gu")
 plt.ylabel('PM10', fontsize = 30)
 
-
+# 그래프 겹치지 않도록 출력 
 plt.tight_layout()
 plt.show()
 
@@ -198,6 +200,7 @@ plt.show()
 
 
 # 예측값과 실제값 오류를 알아보기
+# mse 함수를 사용하여 오차율을 계산함 
 from sklearn.metrics import mean_squared_error
 from math import sqrt
 
@@ -213,21 +216,22 @@ print("2019년 마포구 2월~12월 미세먼지예측값 오차율 = ", error2)
 
 # 초미세먼지 학습시켜 예측해보기 
 model2 = Sequential()
+# 입력층 32, 활성화함수 : relu
 model2.add(LSTM(32, activation = 'relu', input_shape = (steps,feature) )) 
 model2.add(Dense(1))
 model2.compile(optimizer = 'adam', loss='mse')
 
+# 모델 학습시키기 
 hist2 = model2.fit(X_pm25, c, epochs = 50, batch_size = 10, verbose = 1)
 model.summary
 
 
 # In[32]:
 
-
 TEST1 = pd.read_csv('Mapo-tests.csv', encoding = 'CP949') # 테스트셋
 TEST1['PM2.5'] = TEST1['PM2.5'].fillna(df['PM2.5'].mean()).astype(float)
 
-
+# 테스트셋도 예측 전에 전처리 과정과 정규화과정을 수행한다. 
 test_pm25_1 = array(TEST1['PM2.5'])
 x_testpm25_1, y_testpm25_1 = split(test_pm25_1, steps)
 test_a1 = MinMaxScalar(x_testpm25_1)
@@ -241,7 +245,6 @@ y_pred1 = model.predict(x_testpm25_1)
 
 # In[33]:
 
-
 plt.plot(Test_PM25_1, 'r')
 plt.plot(y_pred1, 'b')
 plt.title("Mapo-gu")
@@ -253,6 +256,7 @@ plt.show()
 
 
 # 예측값과 실제 값 오류를 알아보기
+# mse 함수를 사용하여 오차율을 계산한다.
 from sklearn.metrics import mean_squared_error
 from math import sqrt
 
@@ -260,10 +264,4 @@ error1 = sqrt(mean_squared_error(Test_PM25_1, y_pred1))
 
 
 print("2019년 마포구 초미세먼지예측값 오차율 = ", error1)
-
-
-# In[ ]:
-
-
-
 
